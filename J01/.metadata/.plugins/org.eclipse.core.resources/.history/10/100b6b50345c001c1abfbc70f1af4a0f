@@ -1,0 +1,14 @@
+package com.devcamp;
+
+public class main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		person per1 = new person();
+		person per2 = new person(7, 25, "Bao", "Tran Quang", "vietnam");
+		System.out.println(per2.country);
+		System.out.println(per2.getFullName());
+		System.out.println("Hello World");
+	}
+
+}

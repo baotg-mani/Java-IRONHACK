@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>67.S10</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+		integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+	<!-- Import Datatable sau jquery -->
+	<!-- Import them style bootstrap cho datatable -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+	<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+</head>
+
+<body>
+
+	<div class="container">
+		<h2 style="text-align: center;">Quản trị Drink</h2>
+		<div class="jumbotron container">
+			<div class="row form-group">
+				<div class="col-sm-3">
+					<label for="drink-code">Mã Drink</label>
+				</div>
+				<div class="col-sm-9">
+					<input type="text" id="input-drink-code" name="" placeholder="Mã đồ uống" class="form-control">
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-3">
+					<label for="drink-name">Tên Drink</label>
+				</div>
+				<div class="col-sm-9">
+					<input type="text" id="input-drink-name" name="" placeholder="Tên đồ uống" class="form-control">
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-3">
+					<label for="price">Đơn giá</label>
+				</div>
+				<div class="col-sm-9">
+					<input type="text" id="input-price" name="" placeholder="Note" class="form-control">
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-3">
+					<label for="createDate">Ngày Tạo</label>
+				</div>
+				<div class="col-sm-9">
+					<input type="date" id="input-createDate" name="createDate" placeholder="Create Date" class="form-control">
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-3">
+					<label for="updateDate">Ngày sửa</label>
+				</div>
+				<div class="col-sm-9">
+					<input type="date" id="input-updateDate" name="updateDate" placeholder="Update Date" class="form-control">
+				</div>
+			</div>
+			<div class="row pull-right">
+				<div class="col-sm-12">
+					<button id="save_data" class="btn btn-info">Save Data</button>
+				</div>
+			</div>
+			<div class="row pull-right mt-2">
+				<div class="col-sm-12">
+					<button id="del_all" class="btn btn-danger">Delete All</button>
+				</div>
+			</div>
+		</div>
+		<table class="table table-bordered table-striped table-hover text-center" id="drink-table">
+			<thead>
+				<tr>
+					<th>STT</th>
+					<th>Mã đồ uống</th>
+					<th>Tên đồ uống</th>
+					<th>Đơn giá</th>
+					<th>Ngày tạo</th>
+					<th>Ngày cập nhật</th>
+					<th>Xóa</th>
+				</tr>
+		</table>
+
+		<div id="modal-del-all" class="modal" tabindex="-1" role="dialog" style="display: none;">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Delete All of Drinks</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<p>Are you sure you want to delete all of drinks?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" id="confirm-del">Delete</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="modal-del-one" class="modal" tabindex="-1" role="dialog" style="display: none;">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Delete Row</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<p>Are you sure you want to delete this drinks?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" id="confirm-del-one">Delete</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		"use strict";
+		/*** REGION 1 - Global variables - Vùng khai báo biến, hằng số, tham số TOÀN CỤC */
+		var gTable = $("#drink-table").DataTable({
+			"columns": [
+				{ "data": "id" },
+				{ "data": "maNuocUong" },
+				{ "data": "tenNuocUong" },
+				{ "data": "donGia" },
+				{ "data": "ngayTao" },
+				{ "data": "ngayCapNhat" }
+			],
+			columnDefs: [
+				{
+					targets: 6,
+					defaultContent:
+						`
+						<button class='btn btn-info btn-sm edit'>
+							<i class='fas fa-edit'></i>
+						</button>	
+						<button class='btn btn-danger btn-sm delete'>
+              <i class='far fa-trash-alt'></i>
+            </button>`
+				}
+			]
+		});
+
+		const gNORMAL_MODE = "normal";
+		const gCREATE_MODE = "create";
+		const gUPDATE_MODE = "update";
+		const gDELETE_MODE = "delete";
+		var gFormMode = gNORMAL_MODE;
+
+		var gId = null;
+
+		/*** REGION 2 - Vùng gán / thực thi hàm xử lý sự kiện cho các elements */
+		$(document).ready(function () {
+			onPageLoading();
+
+			$(document).on("click", ".edit", function () {
+				onBtnEditClick(this);
+			});
+
+			// gán sự kiện click vào btn Save data
+			$("#save_data").on("click", onBtnSaveData);
+
+			// gán sự kiện click vào icon Delete
+			$(document).on("click", ".delete", function () {
+				onBtnDeleteClick(this);
+			});
+
+			// gán sự kiện click Confirm Delete Row
+			$("#confirm-del-one").on("click", function () {
+				onConfirmDelOneClick();
+			});
+
+			// gán sự kiện click vào btn Delete ALL
+			$("#del_all").on("click", function () {
+				onBtnDelAllClick();
+			});
+
+			// gán sự kiện click Confirm Delete All
+			$("#confirm-del").on("click", function () {
+				onConfirmDelAllClick();
+			})
+
+			// xử lý sự kiện khi ẩn modal delete all
+			$("#modal-del-all").on("hidden.bs.modal", function () {
+				resetData();
+			});
+		});
+
+		/*** REGION 3 - Event handlers - Vùng khai báo các hàm xử lý sự kiện */
+		// Ham xu ly su kien load Page
+		function onPageLoading() {
+			loadAllDataToTable();
+		}
+
+		// Hàm xử lý khi click vào Row trong bảng
+		function onBtnEditClick(paramEdit) {
+			// thay đổi trạng thái
+			gFormMode = gUPDATE_MODE;
+			//B0: tạo obj lưu data
+			var vRowObj = {};
+			//B1: thu thập data
+			vRowObj = gTable.row($(paramEdit).parents("tr")).data();
+			gId = vRowObj.id;
+			//B2: validate(bỏ qua)
+			//B3: call api get drink theo ID
+			$.ajax({
+				type: "GET",
+				url: "http://localhost:8080/drinks" + "/" + gId,
+				success: function (resDrink) {
+					console.log(resDrink);
+
+					$("#input-drink-code").val(resDrink.maNuocUong);
+					$("#input-drink-name").val(resDrink.tenNuocUong);
+					$("#input-price").val(resDrink.donGia);
+					$("#input-createDate").val((resDrink.ngayTao).split("-").reverse().join("-"));
+					$("#input-updateDate").val((resDrink.ngayCapNhat).split("-").reverse().join("-"));
+				}
+			});
+		}
+
+		// Hàm xử lý sự kiện click vào nút Sava data
+		function onBtnSaveData() {
+			//B0: tạo biến lưu dữ liệu
+			var vUpdateObj = {
+				id: gId,
+				donGia: null,
+				maNuocUong: "",
+				ngayCapNhat: "",
+				ngayTao: "",
+				tenNuocUong: ""
+			}
+			//B1: thu thập dữ liệu
+			getDataOnForm(vUpdateObj);
+			//B2: validate dữ liệu
+			var vIsDataValid = validateData(vUpdateObj);
+			if (vIsDataValid) {
+				if (gFormMode == gUPDATE_MODE) {
+					//B3: call restAPI update dữ liệu
+					$.ajax({
+						type: "PUT",
+						url: "http://localhost:8080/drinks" + "/" + gId,
+						data: JSON.stringify(vUpdateObj),
+						dataType: "json",
+						contentType: "application/json; charset=utf-8",
+						success: function (resDrink) {
+							//B4: xử lý hiển thị front end
+							loadAllDataToTable();
+							resetData();
+						}
+					});
+				} else { //Create drink (POST dữ liệu)
+					//B3: call restAPI create dữ liệu
+					console.log("ok")
+					vUpdateObj.id = gId;
+					$.ajax({
+						type: "POST",
+						url: "http://localhost:8080/drinks",
+						data: JSON.stringify(vUpdateObj),
+						dataType: "json",
+						contentType: "application/json; charset=utf-8",
+						success: function (resDrink) {
+							//B4: xử lý hiển thị front end
+							loadAllDataToTable();
+							resetData();
+						}
+					});
+				}
+			}
+		}
+
+		// Hàm xử lý sự kiện Delete
+		function onBtnDeleteClick(paramDel) {
+			// đổi trạng thái
+			gFormMode = gDELETE_MODE;
+			// hiển thị modal
+			$("#modal-del-one").modal("show");
+			// thu thập dữ liệu ID
+			var vRow = $(paramDel).parents("tr");
+			var vRowObj = gTable.row(vRow).data();
+			gId = vRowObj.id;
+			console.log(gId);
+		}
+
+		// Hàm xử lý sự kiện click Confirm Delete 1 Drink
+		function onConfirmDelOneClick(paramDel) {
+			$.ajax({
+				type: "DELETE",
+				url: "http://localhost:8080/drinks" + "/" + gId,
+				success: function (response) {
+					loadAllDataToTable();
+					resetData();
+					$("#modal-del-one").modal("hide");
+				}
+			});
+		}
+
+		// Hàm xử lý sự kiện xóa tất cả dữ liệu vouchers
+		function onBtnDelAllClick() {
+			// hiển thị modal del ALL
+			$("#modal-del-all").modal("show");
+			// thay đổi trạng thái
+			gFormMode = gDELETE_MODE;
+		}
+
+		// Hàm xử lý sự kiện click Confirm xóa ALL
+		function onConfirmDelAllClick() {
+			$.ajax({
+				type: "DELETE",
+				url: "http://localhost:8080/drinks",
+				success: function (response) {
+					loadAllDataToTable();
+					resetData();
+					$("#modal-del-all").modal("hide");
+				}
+			});
+		}
+
+		/*** REGION 4 - Common funtions - Vùng khai báo hàm dùng chung trong toàn bộ chương trình*/
+		// Ham xu ly load data vouchers to Table
+		function loadAllDataToTable() {
+			$.ajax({
+				url: "http://localhost:8080/drinks",
+				type: "GET",
+				dataType: "json",
+				success: function (res) {
+					console.log(res);
+					gTable.clear();
+					gTable.rows.add(res);
+					gTable.draw();
+				},
+				error: function (err) {
+					console.log(err.response);
+				}
+			});
+		}
+
+		// Hàm thu thập dữ liệu trên form
+		function getDataOnForm(paramObj) {
+			paramObj.donGia = parseInt($("#input-price").val());
+			paramObj.maNuocUong = $("#input-drink-code").val();
+			paramObj.tenNuocUong = $("#input-drink-name").val();
+			paramObj.ngayTao = $("#input-createDate").val();
+			paramObj.ngayCapNhat = $("#input-updateDate").val();
+		}
+
+		// Hàm kiểm tra dữ liệu
+		function validateData(paramObj) {
+			if (paramObj.maNuocUong == "") {
+				alert("Thiếu mã drink");
+				return false;
+			}
+			if (paramObj.tenNuocUong == "") {
+				alert("Thiếu tên drink");
+				return false;
+			}
+			if (paramObj.ngayTao == "") {
+				alert("Thiếu ngày tạo");
+				return false;
+			}
+			if (isNaN(paramObj.donGia)) {
+				alert("Phải là số");
+				return false
+			}
+			return true;
+		}
+
+		// Hàm reset dữ liệu
+		function resetData() {
+			gFormMode = gNORMAL_MODE;
+
+			$("#input-drink-code").val("");
+			$("#input-drink-name").val("");
+			$("#input-price").val("");
+			$("#input-createDate").val("");
+			$("#input-updateDate").val("");
+
+			gId = null;
+		}
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+package com.devcamp;
+
+import java.util.ArrayList;
+
+public class person {
+//	khai báo các thuộc tính cùng Modifier + data type (kiểu dữ liệu)
+	private int id;
+	private int age;
+	private String firstName;
+	private String lastName;
+	private ArrayList<String> cars;
+	public String country;
+//	contructor has params
+//	param: id, age, firstName, lastName, country
+	public person(int id, int age, String firstName, 
+			String lastName, String country, ArrayList<String> cars) {
+		this.id = id;
+		this.age = age;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.country = country;
+		this.cars = cars; 
+	}
+//	contructor has NOT params
+//	param: none
+	public person() {
+		this.id = 0;
+		this.age = 25;
+		this.firstName = "Bao";
+		this.lastName = "Tran Gia";
+		this.country = "vietnam";
+	}	
+//	method getFullName
+	public String getFullName() {
+		return this.lastName + " " + this.firstName;
+	}
+}

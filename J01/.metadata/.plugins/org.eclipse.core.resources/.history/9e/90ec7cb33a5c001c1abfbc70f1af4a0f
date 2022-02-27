@@ -1,0 +1,21 @@
+package com.devcamp;
+import java.util.ArrayList;
+
+public class main {
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		person per1 = new person();
+		person per2 = new person(7, 25, "Bao", "Tran", "vietnam", new ArrayList<String>());
+		System.out.println(per2.country);
+		System.out.println(per2.getFullName());
+		System.out.println("Hello World");
+		
+//		khởi tạo ArrayList chứa String
+		ArrayList<String> hello = new ArrayList<String>();
+		hello.add("Hello Devcamp"); // add 1 string vào array
+		System.out.print(hello); // in array có 1 phần tử ra màn hình
+		
+//		
+	}
+
+}

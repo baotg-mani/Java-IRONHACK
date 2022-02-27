@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>J14.20</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- Import Datatable sau jquery -->
+  <!-- Import them style bootstrap cho datatable -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+  <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+</head>
+
+<body>
+
+  <div class="container jumbotron mt-3 text-center">
+    <div class="row">
+      <div class="form-group">
+        <button class="btn btn-primary" id="btn-api-voucher">Get Vouchers</button>
+        <button class="btn btn-primary" id="btn-api-drink">Get Drinks</button>
+        <button class="btn btn-primary" id="btn-api-menu">Get Menus</button>
+        <button class="btn btn-primary" id="btn-api-customer">Get Customer</button>
+        <button class="btn btn-primary" id="btn-api-order">Get Order by customerId</button>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <table id="my-table" class="table table-striped table-hover table-bordered DataTable">
+      <thead></thead>
+    </table>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      /*** REGION 1 - Global variables - Vùng khai báo biến, hằng số, tham số TOÀN CỤC */
+
+      /*** REGION 2 - Vùng gán / thực thi hàm xử lý sự kiện cho các elements */
+      $("#btn-api-voucher").on("click", getVouchers);
+      $("#btn-api-drink").on("click", getDrinks);
+      $("#btn-api-menu").on("click", getMenus);
+      $("#btn-api-customer").on("click", getCustomers);
+      $("#btn-api-order").on("click", getOrders);
+
+      /*** REGION 3 - Event handlers - Vùng khai báo các hàm xử lý sự kiện */
+      function getVouchers() {
+        // check: nếu đã có DataTable rồi thì hủy và làm trống thead ở trong DOM
+        if ($.fn.dataTable.isDataTable('#my-table')) {
+          $("#my-table").DataTable().destroy();
+          $("#my-table").html("");
+          $("#my-table").append("<thead></thead><tbody></tbody>");
+        }
+        // sau đó tạo lại các cột trong thead
+        $("#my-table thead").append(`
+          <tr>
+            <th>STT</th>
+            <th>Mã giảm giá</th>
+            <th>Phần trăm giảm giá</th>
+            <th>Ghi Chú</th>
+            <th>Ngày tạo</th>
+            <th>Ngày cập nhật</th>
+          </tr>
+        `);
+        // và tạo DataTable mapping vs data từ API
+        var voucherTable = $("#my-table").DataTable({
+          columns: [
+            { data: "id" },
+            { data: "maVoucher" },
+            { data: "phanTramGiamGia" },
+            { data: "ghiChu" },
+            { data: "ngayTao" },
+            { data: "ngayCapNhat" }
+          ]
+        });
+        // call API get data
+        $.ajax({
+          type: "GET",
+          url: "http://localhost:8080/voucher",
+          success: function (voucherList) {
+            //Xóa toàn bộ dữ liệu đang có của bảng
+            voucherTable.clear();
+
+            //Cập nhật data cho bảng 
+            voucherTable.rows.add(voucherList);
+
+            //Cập nhật lại giao diện hiển thị bảng
+            voucherTable.draw();
+          }
+        });
+      }
+
+      function getDrinks() {
+        // check: nếu đã có DataTable rồi thì hủy và làm trống thead ở trong DOM
+        if ($.fn.dataTable.isDataTable('#my-table')) {
+          $("#my-table").DataTable().destroy();
+          $("#my-table").html("");
+          $("#my-table").append("<thead></thead><tbody></tbody>");
+        }
+        // sau đó tạo lại các cột trong thead
+        $("#my-table thead").append(`
+          <tr>
+            <th>STT</th>
+            <th>Mã đồ uống</th>
+            <th>Tên đồ uống</th>
+            <th>Đơn giá</th>
+            <th>Ngày tạo</th>
+            <th>Ngày cập nhật</th>
+          </tr>
+        `);
+        // và tạo DataTable mapping vs data từ API
+        var drinkTable = $("#my-table").DataTable({
+          columns: [
+            { data: "id" },
+            { data: "maNuocUong" },
+            { data: "tenNuocUong" },
+            { data: "donGia" },
+            { data: "ngayTao" },
+            { data: "ngayCapNhat" }
+          ]
+        });
+        // call API get data
+        $.ajax({
+          type: "GET",
+          url: "http://localhost:8080/drink",
+          success: function (drinkList) {
+            console.log(drinkList);
+            //Xóa toàn bộ dữ liệu đang có của bảng
+            drinkTable.clear();
+
+            //Cập nhật data cho bảng 
+            drinkTable.rows.add(drinkList);
+
+            //Cập nhật lại giao diện hiển thị bảng
+            drinkTable.draw();
+          }
+        });
+      }
+
+      function getMenus() {
+        // check: nếu đã có DataTable rồi thì hủy và làm trống thead ở trong DOM
+        if ($.fn.dataTable.isDataTable('#my-table')) {
+          $("#my-table").DataTable().destroy();
+          $("#my-table").html("");
+          $("#my-table").append("<thead></thead><tbody></tbody>");
+        }
+        // sau đó tạo lại các cột trong thead
+        $("#my-table thead").append(`  
+          <tr>	
+            <th>STT</th>
+            <th>Size combo</th>
+            <th>Đường kính</th>
+            <th>Sườn</th>
+            <th>Salad</th>
+            <th>Số lượng nước</th>
+            <th>Đơn giá</th>
+          </tr> 
+        `);
+        // và tạo DataTable mapping vs data từ API
+        var menuTable = $("#my-table").DataTable({
+          columns: [
+            { data: "id" },
+            { data: "size" },
+            { data: "duongKinh" },
+            { data: "suon" },
+            { data: "salad" },
+            { data: "soLuongNuocNgot" },
+            { data: "donGia" }
+          ]
+        });
+        // call API get data
+        $.ajax({
+          type: "GET",
+          url: "http://localhost:8080/menu",
+          success: function (menuList) {
+            console.log(menuList);
+            //Xóa toàn bộ dữ liệu đang có của bảng
+            menuTable.clear();
+
+            //Cập nhật data cho bảng 
+            menuTable.rows.add(menuList);
+
+            //Cập nhật lại giao diện hiển thị bảng
+            menuTable.draw();
+          }
+        });
+      }
+
+      function getCustomers() {
+        // check: nếu đã có DataTable rồi thì hủy và làm trống thead ở trong DOM
+        if ($.fn.dataTable.isDataTable('#my-table')) {
+          $("#my-table").DataTable().destroy();
+          $("#my-table").html("");
+          $("#my-table").append("<thead></thead><tbody></tbody>");
+        }
+        // sau đó tạo lại các cột trong thead
+        $("#my-table thead").append(`
+          <tr>
+            <th>STT</th>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Địa chỉ</th>
+          </tr>
+        `);
+        // và tạo DataTable mapping vs data từ API
+        var drinkTable = $("#my-table").DataTable({
+          columns: [
+            { data: "id" },
+            { data: "fullname" },
+            { data: "email" },
+            { data: "phone" },
+            { data: "address" }
+          ]
+        });
+        // call API get data
+        $.ajax({
+          type: "GET",
+          url: "http://localhost:8080/customer",
+          success: function (drinkList) {
+
+            //Xóa toàn bộ dữ liệu đang có của bảng
+            drinkTable.clear();
+
+            //Cập nhật data cho bảng 
+            drinkTable.rows.add(drinkList);
+
+            //Cập nhật lại giao diện hiển thị bảng
+            drinkTable.draw();
+          }
+        });
+      }
+
+      function getOrders() {
+        // check: nếu đã có DataTable rồi thì hủy và làm trống thead ở trong DOM
+        if ($.fn.dataTable.isDataTable('#my-table')) {
+          $("#my-table").DataTable().destroy();
+          $("#my-table").html("");
+          $("#my-table").append("<thead></thead><tbody></tbody>");
+        }
+        // sau đó tạo lại các cột trong thead
+        $("#my-table thead").append(`
+          <tr>	
+            <th>STT</th>
+            <th>order_id</th>
+            <th>ho_ten</th>
+            <th>email</th>
+            <th>dia_chi</th>
+            <th>phone</th>
+            <th>kich_co</th>
+            <th>loai_pizza</th>
+            <th>duong_kinh</th>
+            <th>salad</th>
+            <th>suon</th>
+            <th>id_nuoc_uong</th>
+            <th>so_luong_nuoc</th>
+            <th>id_voucher</th>
+            <th>giam_gia</th>
+            <th>thanh_tien</th>
+            <th>trang_thai</th>
+            <th>loi_nhan</th>
+            <th>ngay_tao</th>
+            <th>ngay_update</th>
+          </tr>
+        `);
+        // và tạo DataTable mapping vs data từ API
+        var drinkTable = $("#my-table").DataTable({
+          columns: [
+            { data: "id" },
+            { data: "orderId" },
+            { data: "hoTen" },
+            { data: "email" },
+            { data: "diaChi" },
+            { data: "soDienThoai" },
+            { data: "kichCo" },
+            { data: "loaiPizza" },
+            { data: "duongKinh" },
+            { data: "salad" },
+            { data: "suon" },
+            { data: "idLoaiNuocUong" },
+            { data: "soLuongNuoc" },
+            { data: "idVourcher" },
+            { data: "giamGia" },
+            { data: "thanhTien" },
+            { data: "trangThai" },
+            { data: "loiNhan" },
+            { data: "ngayTao" },
+            { data: "ngayCapNhat" }
+          ]
+        });
+        // call API get data
+        $.ajax({
+          type: "GET",
+          url: "http://localhost:8080/order?customerId=1",
+          success: function (drinkList) {
+
+            //Xóa toàn bộ dữ liệu đang có của bảng
+            drinkTable.clear();
+
+            //Cập nhật data cho bảng 
+            drinkTable.rows.add(drinkList);
+
+            //Cập nhật lại giao diện hiển thị bảng
+            drinkTable.draw();
+          }
+        });
+      }
+
+      /*** REGION 4 - Common funtions - Vùng khai báo hàm dùng chung trong toàn bộ chương trình*/
+
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Drinks</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- Import Datatable sau jquery -->
+  <!-- Import them style bootstrap cho datatable -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+  <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
+  <script>
+      $(document).ready(function(){
+        var table = $("#user-table").DataTable( {
+          // Khai báo các cột của datatable (Chú ý tên cột phải giống thuộc tính của object trong mảng đã khai báo)
+          "columns" : [
+              { "data" : "id" },
+              { "data" : "maNuocUong" },
+              { "data" : "tenNuocUong" },
+              { "data" : "donGia" },
+              { "data" : "ngayTao" },
+              { "data" : "ngayCapNhat" }
+          ]
+        });
+
+        $.ajax({
+            url: "http://localhost:8080/drinks",
+            type: "GET",
+            dataType: 'json',
+            success: function(responseObject){
+                console.log(responseObject);
+                //Xóa toàn bộ dữ liệu đang có của bảng
+                table.clear();
+
+                //Cập nhật data cho bảng 
+                table.rows.add(responseObject);
+
+                //Cập nhật lại giao diện hiển thị bảng
+                table.draw();
+            },
+            error: function(error){
+                console.log(error.responseText);
+            }
+        });
+      });
+  </script>
+</head>
+<body>
+
+<div class="container">
+  <h2 style="text-align: center;">Quản trị Drink</h2>
+	<div class="jumbotron container">
+	  <div class="row form-group">
+		<div class="col-sm-3">
+		  <label for="drinkcode">Mã nước uống</label>
+		</div>
+		<div class="col-sm-9">
+		  <input type="text" id="input-drink-code" name="drinkcode" placeholder="mã nước uống"
+			class="form-control">
+		</div>
+	  </div>
+	  <div class="row form-group">
+		<div class="col-sm-3">
+		  <label for="drinkname">Tên nước uống</label>
+		</div>
+		<div class="col-sm-9">
+		  <input type="number" id="input-drink-name" name="drinkname" placeholder="tên nước uống" class="form-control">
+		</div>
+	  </div>
+	  <div class="row form-group">
+		<div class="col-sm-3">
+		  <label for="price">Đơn giá</label>
+		</div>
+		<div class="col-sm-9">
+		  <input type="text" id="input-price" name="price" placeholder="giá" class="form-control">
+		</div>
+	  </div>
+	  <div class="row form-group">
+		<div class="col-sm-3">
+		  <label for="createDate">Ngày Tạo</label>
+		</div>
+		<div class="col-sm-9">
+		  <input type="date" id="input-createDate" name="createDate" placeholder="ngày tạo" class="form-control">
+		</div>
+	  </div>
+	  <div class="row form-group">
+		<div class="col-sm-3">
+		  <label for="updateDate">Ngày sửa</label>
+		</div>
+		<div class="col-sm-9">
+		  <input type="date" id="input-updateDate" name="updateDate" placeholder="ngày cập nhật" class="form-control">
+		</div>
+	  </div>
+	  <div class="row pull-right">
+		<div class="col-sm-12">
+		  <button id="save_data" class="btn btn-info">Save Data</button>
+		</div>
+	  </div>
+	</div>
+  <table class="table table-bordered table-striped table-hover" id="user-table">
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Mã nước uống</th>
+        <th>Tên nước uống</th>
+        <th>Đơn giá</th>
+        <th>Ngày tạo</th>
+        <th>Ngày cập nhật</th>
+      </tr>
+  </table>
+</div>
+
+</body>
+</html>

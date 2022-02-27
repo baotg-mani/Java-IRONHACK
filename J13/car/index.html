@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Responsive Form</h2>
+    <p>sample forms 02: multi colums</p>
+
+    <form id="inputform01" class="jumbotron container">
+      <div class="row form-group">
+        <div class="col-sm-3">
+          <label for="fname">First Name</label>
+        </div>
+        <div class="col-sm-9">
+          <input type="text" id="fname" name="firstname" placeholder="Your name.." class="form-control">
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-sm-3">
+          <label for="lname">Last Name</label>
+        </div>
+        <div class="col-sm-9">
+          <input type="text" id="lname" name="lastname" placeholder="Your last name.." class="form-control">
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-sm-3">
+          <label for="car">Car</label>
+        </div>
+        <div class="col-sm-3">
+          <select id="car-select" name="car" class="form-control">
+          </select>
+        </div>
+        <div class="col-sm-3">
+          <label for="cartype">Car Type</label>
+        </div>
+        <div class="col-sm-3">
+          <select id="cartype-select" disabled name="cartype" class="form-control">
+          </select>
+        </div>
+      </div>
+      <div class="row pull-right">
+        <div class="col-sm-12">
+          <input type="button" value="Send" class="btn btn-info" id="send-button">
+        </div>
+      </div>
+    </form>
+  </div>
+  <script>
+    //Get data cars
+    $.ajax({
+      url: "http://localhost:8080/car/devcamp-cars",
+      method: "GET",
+      success: function(pObjRes) {
+        console.log(pObjRes);
+        loadDataToCarSelect(pObjRes);
+      },
+      error: function(pXhrObj) {
+        console.log(pXhrObj);
+      }
+    });
+
+    var gCarSelectElement = $("#car-select");
+
+    function loadDataToCarSelect(pCarList) {
+      for (i = 0; i < pCarList.length; i++) {
+        var bCarOption = $("<option/>");
+        bCarOption.prop("value", pCarList[i].carCode);
+        bCarOption.prop("text", pCarList[i].carName);
+        gCarSelectElement.append(bCarOption);
+      };
+    }
+
+    var gCarTypeSelectElement = $("#cartype-select");
+
+    //callback function
+    gCarSelectElement.on("change", function () {
+      gCarTypeSelectElement.html("");
+      var bCarCode = $(this).val();
+      console.log("Just changed select car: " + bCarCode);
+      getCarTypesByCarCode(bCarCode);
+    });
+
+    //find carType array by carCode
+    function getCarTypesByCarCode(pCarCode) {
+      $.ajax({
+        url: "http://localhost:8080/car/devcamp-cartypes?carCode="+pCarCode,
+        method: "GET",
+        success: function(pObjRes) {
+          console.log(pObjRes);
+          loadDataToCarTypeSelect(pObjRes);
+        },
+        error: function(pXhrObj) {
+          console.log(pXhrObj);
+        }
+      });
+    }
+
+    function loadDataToCarTypeSelect(pCarTypeList) {
+      if (pCarTypeList.length > 0) {
+        gCarTypeSelectElement.prop("disabled", false);
+
+        for (i = 0; i < pCarTypeList.length; i++) {
+          var bCarTypeOption = $("<option/>");
+          bCarTypeOption.prop("value", pCarTypeList[i].typeCode);
+          bCarTypeOption.prop("text", pCarTypeList[i].typeName);
+          gCarTypeSelectElement.append(bCarTypeOption);
+        };
+      } else {
+        gCarTypeSelectElement.prop("disabled", "disabled");
+      }
+    }
+
+  </script>
+</body>
+
+</html>

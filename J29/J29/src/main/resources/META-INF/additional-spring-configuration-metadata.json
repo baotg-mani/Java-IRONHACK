@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "spring.jpa.hibernate.connection.zeroDateTimeBehavior",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.jpa.hibernate.connection.zeroDateTimeBehavior'"
+  },
+  {
+    "name": "spring.jpa.hibernate.connection.zeroDateTimeBehavior",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.jpa.hibernate.connection.zeroDateTimeBehavior'"
+  },
+  {
+    "name": "spring.jpa.hibernate.connection.zeroDateTimeBehavior",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.jpa.hibernate.connection.zeroDateTimeBehavior'"
+  },
+  {
+    "name": "spring.jpa.hibernate.connection.zeroDateTimeBehavior",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.jpa.hibernate.connection.zeroDateTimeBehavior'"
+  }
+]}

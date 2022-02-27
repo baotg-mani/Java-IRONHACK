@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #form-login {
+      margin: 20px;
+      padding: 20px;
+      background-color: #ffffff4d;
+      box-shadow: 0 7px 7px rgba(0, 0, 0, 0.12), 0 12px 40px rgba(0, 0, 0, 0.24);
+      transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <form id="form-submit">
+      <div class="row">
+        <div id="form-login" class="col-sm-4 text-center rounded mx-auto my-0">
+          <div class="mb-3 border-bottom pb-1">
+            <h3 class="text-center"><b>Login to your account</b></h3>
+          </div>
+
+          <div class="form-group mt-4">
+            <input type="text" name="email" placeholder="Email address" id="inp-email" class="form-control my-2"
+              value="" autocomplete="email">
+            <input name="password" id="inp-password" placeholder="Password" class="form-control my-2" value=""
+              autocomplete="inp-password" type="password">
+          </div>
+
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-6">
+                <input type="checkbox" id="ckb-remember-account">
+                <label>Remember account</label>
+              </div>
+              <div class="col-sm-6">
+                <a class="text-decoration float-right" href="#">Lost password?</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <button class="btn btn-log btn-block btn-info" id="btn-login">Login</button>
+          </div>
+
+          <div class="text-left">Or <a href="../sign-up/signUp.html">Sign-up</a> for having an account</div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script src="login.js"></script>
+</body>
+
+</html>

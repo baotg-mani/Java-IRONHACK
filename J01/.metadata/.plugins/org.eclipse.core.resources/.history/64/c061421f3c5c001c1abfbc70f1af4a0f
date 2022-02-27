@@ -1,0 +1,29 @@
+package com.devcamp;
+import java.util.ArrayList;
+
+public class main {
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		person per1 = new person();
+		person per2 = new person(7, 25, "Bao", "Tran Quang", "vietnam");
+		System.out.println(per2.country);
+		System.out.println(per2.getFullName());
+		System.out.println("Hello World");
+		
+//		khởi tạo ArrayList chứa String
+		ArrayList<String> hello = new ArrayList<String>();
+		hello.add("Hello Devcamp"); // add 1 string vào array
+		System.out.print(hello); // in array có 1 phần tử ra màn hình
+		
+//		set lại tuổi, tên và country => in dữ liệu per2 lên console
+		System.out.println("\n---------");
+		per2.setAge(26);
+		per2.setLastName("Tran Gia");
+		per2.setCountry("Việt Nam");
+		per2.printPerson();
+		
+//		sout age khi modify thành public
+		System.out.println("Tuổi: " + per2.age);
+	}
+
+}
